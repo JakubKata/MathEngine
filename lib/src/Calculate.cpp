@@ -1,5 +1,20 @@
 #include "Calculate.hpp"
 
+void Engine::dualOperatorSecurity(std::vector<std::string> &part_input){
+    while (!(part_input.empty() || OperatorFactory::isNumber(part_input[0]))) {
+        part_input.erase(part_input.begin(), part_input.begin() + 1);
+    }
+    if (part_input.empty()){
+        part_input.push_back("0.0");
+    }
+    for (int i = 1; i < part_input.size(); i++) {
+        if(OperatorFactory::isOperator(part_input[i]) && OperatorFactory::isOperator(part_input[i-1])){
+            part_input.erase(part_input.begin() + i, part_input.begin() + i + 1);
+            i = i - 1;
+        }
+    }    
+}
+
 int Engine::operatorIndex(std::vector<std::string> &part_input) {
     int operator_index;
     int highest_priority = -1;
@@ -31,6 +46,7 @@ double Engine::processLogic(std::vector<std::string> &part_input) {
 }
 
 double Engine::engine(std::vector<std::string> &part_input) {
+    dualOperatorSecurity(part_input);
     return processLogic(part_input);
 }
 

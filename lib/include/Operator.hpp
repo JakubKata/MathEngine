@@ -78,11 +78,11 @@ public:
     }
     static bool isNumber(std::string token) {
         for (int i = 0; i < token.size(); ++i) {
-            if (!((token[i] == '-' && i == 0) || isdigit(token[i]) || token[i] == '.')) {
-                return false;
+            if ((token[i] == '-' && i == 0) || isdigit(token[i]) || token[i] == '.') {
+                return true;
             } 
         }
-        return true;
+        return false;
     }    
     static Operator* getOperator(std::string token) {
         if (token == "+") {

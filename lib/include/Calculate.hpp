@@ -10,6 +10,7 @@
 
 class Engine {
 private:
+    static void dualOperatorSecurity(std::vector<std::string> &part_input);
     static int operatorIndex(std::vector<std::string> &part_input);
     static double processLogic(std::vector<std::string> &part_input);
 public:

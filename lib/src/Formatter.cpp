@@ -1,6 +1,10 @@
 #include "Formatter.hpp"
 
 std::string Formater::processLogic(std::string &input) {
+    if (input.empty()) {
+        input = "0.0";
+    }
+
     int parenthesis_open = 0;
     int parenthesis_close = 0;
     for (int i = 0; i < input.size(); ++i) {
