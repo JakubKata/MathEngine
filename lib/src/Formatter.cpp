@@ -1,6 +1,25 @@
 #include "Formatter.hpp"
 
 std::string Formater::processLogic(std::string &input) {
+    int parenthesis_open = 0;
+    int parenthesis_close = 0;
+    for (int i = 0; i < input.size(); ++i) {
+        if (input[i] == '(') {
+            parenthesis_open = parenthesis_open + 1;
+        } else if (input[i] == ')') {
+            parenthesis_close = parenthesis_close + 1;
+        }
+    }
+    while (parenthesis_close != parenthesis_open) {
+        if (parenthesis_open > parenthesis_close) {
+            parenthesis_close = parenthesis_close + 1;
+            input = input + ')';
+        } else if (parenthesis_open < parenthesis_close) {
+            parenthesis_open = parenthesis_open + 1;
+            input = '(' + input;
+        }
+    }
+    
     std::string input_format;
 
     for (int i = 0; i < input.size(); ++i) {            
