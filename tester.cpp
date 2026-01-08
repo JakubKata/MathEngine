@@ -5,11 +5,10 @@
 #include <iomanip>
 #include <limits>
 #include <functional>
-#include "MathEngine.hpp" // Upewnij się, że ten plik jest w tym samym folderze!
+#include "MathEngine.hpp" 
 
-// --- KONFIGURACJA ---
 const double EPSILON = 0.001;
-const bool SHOW_ONLY_FAILURES = false; // false = pokazuje WSZYSTKIE testy
+const bool SHOW_ONLY_FAILURES = false;
 
 struct TestCase {
     std::string category;
@@ -17,11 +16,9 @@ struct TestCase {
     double expected;
 };
 
-// Funkcja pomocnicza do porównywania wyników
 bool isCorrect(double result, double expected) {
     if (std::isnan(expected)) return std::isnan(result);
     if (std::isinf(expected)) return std::isinf(result) && ((expected > 0) == (result > 0));
-    // Specyfika Twojego silnika: 1/0 = 0.
     if (std::isinf(expected) && result == 0.0) return true; 
     
     return std::abs(result - expected) < EPSILON;
@@ -31,10 +28,6 @@ int main() {
     std::vector<TestCase> tests;
 
     std::cout << "Generowanie testow..." << std::endl;
-
-    // ==========================================
-    // 1. BASIC ARITHMETIC & PRIORITY
-    // ==========================================
     tests.push_back({"Basic", "2+2", 4.0});
     tests.push_back({"Basic", "2.5+2.5", 5.0});
     tests.push_back({"Basic", "10-20", -10.0});
@@ -45,10 +38,6 @@ int main() {
     tests.push_back({"Order", "2^3*2", 16.0});
     tests.push_back({"Order", "10/2*5", 25.0});
     tests.push_back({"Order", "2+3*4-5/2", 11.5});
-
-    // ==========================================
-    // 2. NEGATIVE NUMBERS & UNARY MINUS
-    // ==========================================
     tests.push_back({"Unary", "-5+2", -3.0});
     tests.push_back({"Unary", "2+-5", -3.0});
     tests.push_back({"Unary", "2*-5", -10.0});
@@ -58,10 +47,6 @@ int main() {
     tests.push_back({"Unary", "5--5", 10.0}); 
     tests.push_back({"Unary", "-sin(0)", 0.0});
     tests.push_back({"Unary", "10/-2", -5.0});
-
-    // ==========================================
-    // 3. POWERS & NEGATIVE EXPONENTS
-    // ==========================================
     tests.push_back({"Power", "2^3", 8.0});
     tests.push_back({"Power", "2^-1", 0.5});
     tests.push_back({"Power", "2^-2", 0.25});
@@ -74,10 +59,6 @@ int main() {
     tests.push_back({"PowerHard", "2^-sin(0)", 1.0});
     tests.push_back({"PowerHard", "2^-sqrt(4)", 0.25});
     tests.push_back({"PowerHard", "10^-((1))", 0.1}); 
-
-    // ==========================================
-    // 4. FUNCTIONS & NESTING
-    // ==========================================
     tests.push_back({"Func", "sin(0)", 0.0});
     tests.push_back({"Func", "cos(0)", 1.0});
     tests.push_back({"Func", "sqrt(16)", 4.0});
@@ -85,45 +66,26 @@ int main() {
     tests.push_back({"Func", "sin(sqrt(0))", 0.0});
     tests.push_back({"Func", "sin(cos(0)+sin(0)-1)", 0.0});
     tests.push_back({"Func", "sqrt(3^2+4^2)", 5.0});
-
-    // ==========================================
-    // 5. IMPLICIT MULTIPLICATION
-    // ==========================================
     tests.push_back({"Implicit", "2(3)", 6.0});
     tests.push_back({"Implicit", "(2)(3)", 6.0});
     tests.push_back({"Implicit", "2sqrt(16)", 8.0});
     tests.push_back({"Implicit", "(2+2)2", 8.0});
     tests.push_back({"Implicit", "2(2(2))", 8.0});
-
-    // ==========================================
-    // 6. STRESS TESTS
-    // ==========================================
     std::string sum_chain = "0";
     for(int i=0; i<300; ++i) sum_chain += "+1";
     tests.push_back({"Stress-Add", sum_chain, 300.0});
-
     std::string deep_open = "";
     std::string deep_close = "";
     int depth = 100; 
     for(int i=0; i<depth; ++i) { deep_open += "("; deep_close += ")"; }
     tests.push_back({"Stress-Parens", deep_open + "123" + deep_close, 123.0});
-
     std::string alt_chain = "0";
     for(int i=0; i<100; ++i) alt_chain += "+10-10";
     tests.push_back({"Stress-Alt", alt_chain, 0.0});
-
-    // ==========================================
-    // 7. NESTED FUNCTIONS
-    // ==========================================
-    tests.push_back({"DeepFunc", "sqrt(sqrt(sqrt(sqrt(256))))", 1.414214});
-    
+    tests.push_back({"DeepFunc", "sqrt(sqrt(sqrt(sqrt(256))))", 1.414214});    
     std::string sin_chain = "0";
     for(int i=0; i<50; ++i) sin_chain = "sin(" + sin_chain + ")";
     tests.push_back({"DeepFunc-Sin", sin_chain, 0.0});
-
-    // ==========================================
-    // 8. EDGE CASES
-    // ==========================================
     tests.push_back({"Edge", "", 0.0});
     tests.push_back({"Edge", "()", 0.0});
     tests.push_back({"Edge", "((()))", 0.0});
@@ -132,8 +94,6 @@ int main() {
     tests.push_back({"Edge", "007", 7.0});
     tests.push_back({"Autofix", "((2+2", 4.0});
     tests.push_back({"Autofix", "2+2))", 4.0});
-
-    // --- URUCHAMIANIE TESTÓW ---
 
     std::cout << "Uruchamianie " << tests.size() << " testow..." << std::endl;
     std::cout << "========================================================================" << std::endl;
@@ -155,7 +115,6 @@ int main() {
         bool hasException = false;
         
         try {
-            // Wywołanie Twojego silnika
             result = MathEngine::mathengine(t.expr);
         } catch (const std::exception& e) {
             hasException = true;
@@ -172,10 +131,9 @@ int main() {
             if (hasException) crashed++;
         }
 
-        // Warunek wyświetlania (teraz wyświetla wszystko)
         if (!ok || !SHOW_ONLY_FAILURES) {
              std::string dispExpr = t.expr;
-             // Ucinanie zbyt długich wyrażeń dla czytelności w konsoli
+             
              if (dispExpr.length() > 37) dispExpr = dispExpr.substr(0, 34) + "...";
              
              std::cout << std::left << std::setw(6) << testId 
