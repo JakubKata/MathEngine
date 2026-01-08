@@ -1,166 +1,206 @@
 #include <iostream>
-#include <string>
 #include <vector>
+#include <string>
 #include <cmath>
 #include <iomanip>
-#include "MathEngine.hpp"
+#include <limits>
+#include <functional>
+#include "MathEngine.hpp" // Upewnij się, że ten plik jest w tym samym folderze!
 
-const double TOLERANCE = 0.001;
+// --- KONFIGURACJA ---
+const double EPSILON = 0.001;
+const bool SHOW_ONLY_FAILURES = false; // false = pokazuje WSZYSTKIE testy
 
-struct Case {
+struct TestCase {
+    std::string category;
     std::string expr;
     double expected;
 };
 
-bool isEqual(double a, double b) {
-    return std::abs(a - b) < TOLERANCE;
+// Funkcja pomocnicza do porównywania wyników
+bool isCorrect(double result, double expected) {
+    if (std::isnan(expected)) return std::isnan(result);
+    if (std::isinf(expected)) return std::isinf(result) && ((expected > 0) == (result > 0));
+    // Specyfika Twojego silnika: 1/0 = 0.
+    if (std::isinf(expected) && result == 0.0) return true; 
+    
+    return std::abs(result - expected) < EPSILON;
 }
 
 int main() {
-    std::vector<Case> data = {
-        {"2+2*2", 6.0},
-        {"(2+2)*2", 8.0},
-        {"2+2*2^2", 10.0},
-        {"(2+2*2)^2", 36.0},
-        {"2^3^2", 512.0},
-        {"(2^3)^2", 64.0},
-        {"10/2*5", 25.0},
-        {"10/(2*5", 1.0},
-        {"10/2(5)", 25.0}, 
-        {"2(3)(4)", 24.0},
-        {"2(3+1)(2)", 16.0},
-        {"(1+1)(2+2)(3+3)", 48.0},
-        {"sqrt(16)*sqrt(16)", 16.0},
-        {"sqrt(16+9)", 5.0},
-        {"sqrt(3^2+4^2)", 5.0},
-        {"2+2(2+2(2+2))", 22.0},
-        {"(((5))))", 5.0},
-        {"1+1)2)2", 8.0},
-        {"2((1+1)2)", 8.0},
-        {"10-2-3-4", 1.0},
-        {"10-(2-3-4)", 15.0},
-        {"10-(2-(3-4))", 7.0},
-        {"2+3*4-5^2", -11.0},
-        {"(2+3)*(4-5)^2", 5.0},
-        {"sin(0)+cos(0)", 1.0},
-        {"2(sin(0)+cos(0))", 2.0},
-        {"sqrt(4)sqrt(4)", 4.0},
-        {"2^2/2^2", 1.0},
-        {"2^2*2^2", 16.0},
-        {"2^(1+1+1)", 8.0},
-        {"4^(0.5+0.5)", 4.0},
-        {"10+10(0.5)", 15.0},
-        {"(10+10)0.5", 10.0},
-        {"100/10/10", 1.0},
-        {"100/(10/10)", 100.0},
-        {"2*3*4*5", 120.0},
-        {"(2*3)(4*5)", 120.0},
-        {"1+1/2", 1.5},
-        {"1+1/2*4", 3.0},
-        {"1+1/(2*4)", 1.125},
-        {"2^3-2^2", 4.0},
-        {"3*2^2", 12.0},
-        {"(3*2)^2", 36.0},
-        {"sqrt(100)/2", 5.0},
-        {"sqrt(100)/sqrt(4)", 5.0},
-        {"cos(0)*cos(0)", 1.0},
-        {"sin(0)*500", 0.0},
-        {"10(10(10))", 1000.0},
-        {"(2+2)^2-4", 12.0},
-        {"0.5(100)", 50.0},
-        {"100(0.5.)", 50.0},
-        {"2+2(3-1)^2", 10.0},
-        {"(5-1)(5+1)", 24.0},
-        {"100-25*3", 25.0},
-        {"(100-25)*3", 225.0},
-        {"2^5", 32.0},
-        {"2^0", 1.0},
-        {"(2+2)^0", 1.0},
-        {"+/*", 0.0},
-        {"5*0+5", 5.0},
-        {"5(0)+5", 5.0},
-        {"sqrt(sin(cos()))", 0.9173},
-        {"10(2)(2)(2)", 80.0},
-        {"sqrt(81)+sqrt(49)+sqrt(25)", 21.0},
-        {"100/(2+2+2+**2+2)", 10.0},
-        {"(2+2)(3+3)/**(1+1)", 12.0},
-        {"10*10/10*10", 100.0},
-        {"((((1+1)+1)+1)+1)", 5.0},
-        {"sqrt(sqrt(16))", 2.0},
-        {"2^2^2", 16.0},
-        {"10-(5-2(3))", 11.0},
-        {"1+2*3-4/2", 5.0},
-        {"2(5(2(1)))", 20.0},
-        {"(10-8)(10-8)(10-8)", 8.0},
-        {"(1+2)^2+(3+4)^2", 58.0},
-        {"sqrt(100)-2(4)", 2.0},
-        {"(10(2)+5(4))/2", 20.0},
-        {"2+2*2-2/2", 5.0},
-        {"(6*6)/(6+6)", 3.0},
-        {"5+sqrt(4)(3)", 11.0},
-        {"10^2/10(2)", 20.0}, 
-        {"100-2(3^2)", 82.0},
-        {"(2+2)(2+2)(2+2)", 64.0},
-        {"10(0....1)(1.0.1*100-1)", 100.0},
-        {"2+3(4+5(2))", 44.0},
-        {"sqrt(36)/2(3)", 9.0},
-        {"(2^3*2^2)/2", 16.0},
-        {"10+2(3)(4)-5", 29.0},
-        {"sqrt(64)+2^3", 16.0},
-        {"100/(10+10)+5", 10.0},
-        {"(1+1)^(1+1)^(1+1)", 16.0}, 
-        {"2(2(2(2(2))))", 32.0},
-        {"10*10-5*5-2*2", 71.0},
-        {"(100/2)/2/5", 5.0},
-        {"2+2(sqrt(9)+1)", 10.0},
-        {"1+1(1+1(1+1))", 4.0},
-        {"(3^2+4^2)/5", 5.0},
-        {"100-10(2+3)+5", 55.0},
-        {"sqrt(4)(5+5)", 20.0},
-        {"2+2*2^3/4", 6.0}, 
-        {"20/2(5)", 50.0} 
-    };
+    std::vector<TestCase> tests;
 
-    int ok = 0;
-    int fail = 0;
+    std::cout << "Generowanie testow..." << std::endl;
 
-    std::cout << "TEST COMPLEXITY LEVEL: HARD\n";
-    std::cout << "--------------------------------------------------------\n";
+    // ==========================================
+    // 1. BASIC ARITHMETIC & PRIORITY
+    // ==========================================
+    tests.push_back({"Basic", "2+2", 4.0});
+    tests.push_back({"Basic", "2.5+2.5", 5.0});
+    tests.push_back({"Basic", "10-20", -10.0});
+    tests.push_back({"Basic", "0.1+0.2", 0.3});
+    tests.push_back({"Order", "2+2*2", 6.0});
+    tests.push_back({"Order", "(2+2)*2", 8.0});
+    tests.push_back({"Order", "2*2^3", 16.0});
+    tests.push_back({"Order", "2^3*2", 16.0});
+    tests.push_back({"Order", "10/2*5", 25.0});
+    tests.push_back({"Order", "2+3*4-5/2", 11.5});
 
-    for (size_t i = 0; i < data.size(); i++) {
+    // ==========================================
+    // 2. NEGATIVE NUMBERS & UNARY MINUS
+    // ==========================================
+    tests.push_back({"Unary", "-5+2", -3.0});
+    tests.push_back({"Unary", "2+-5", -3.0});
+    tests.push_back({"Unary", "2*-5", -10.0});
+    tests.push_back({"Unary", "-2^2", -4.0});
+    tests.push_back({"Unary", "(-2)^2", 4.0});
+    tests.push_back({"Unary", "-(-5)", 5.0});
+    tests.push_back({"Unary", "5--5", 10.0}); 
+    tests.push_back({"Unary", "-sin(0)", 0.0});
+    tests.push_back({"Unary", "10/-2", -5.0});
+
+    // ==========================================
+    // 3. POWERS & NEGATIVE EXPONENTS
+    // ==========================================
+    tests.push_back({"Power", "2^3", 8.0});
+    tests.push_back({"Power", "2^-1", 0.5});
+    tests.push_back({"Power", "2^-2", 0.25});
+    tests.push_back({"Power", "4^0.5", 2.0});
+    tests.push_back({"Power", "2^(1+1)", 4.0});
+    tests.push_back({"Power", "2^-(1+1)", 0.25});
+    tests.push_back({"Power", "2^(-1)", 0.5});
+    tests.push_back({"Power", "2^3^2", 512.0});
+    tests.push_back({"Power", "(2^3)^2", 64.0});
+    tests.push_back({"PowerHard", "2^-sin(0)", 1.0});
+    tests.push_back({"PowerHard", "2^-sqrt(4)", 0.25});
+    tests.push_back({"PowerHard", "10^-((1))", 0.1}); 
+
+    // ==========================================
+    // 4. FUNCTIONS & NESTING
+    // ==========================================
+    tests.push_back({"Func", "sin(0)", 0.0});
+    tests.push_back({"Func", "cos(0)", 1.0});
+    tests.push_back({"Func", "sqrt(16)", 4.0});
+    tests.push_back({"Func", "sqrt(2+2)", 2.0});
+    tests.push_back({"Func", "sin(sqrt(0))", 0.0});
+    tests.push_back({"Func", "sin(cos(0)+sin(0)-1)", 0.0});
+    tests.push_back({"Func", "sqrt(3^2+4^2)", 5.0});
+
+    // ==========================================
+    // 5. IMPLICIT MULTIPLICATION
+    // ==========================================
+    tests.push_back({"Implicit", "2(3)", 6.0});
+    tests.push_back({"Implicit", "(2)(3)", 6.0});
+    tests.push_back({"Implicit", "2sqrt(16)", 8.0});
+    tests.push_back({"Implicit", "(2+2)2", 8.0});
+    tests.push_back({"Implicit", "2(2(2))", 8.0});
+
+    // ==========================================
+    // 6. STRESS TESTS
+    // ==========================================
+    std::string sum_chain = "0";
+    for(int i=0; i<300; ++i) sum_chain += "+1";
+    tests.push_back({"Stress-Add", sum_chain, 300.0});
+
+    std::string deep_open = "";
+    std::string deep_close = "";
+    int depth = 100; 
+    for(int i=0; i<depth; ++i) { deep_open += "("; deep_close += ")"; }
+    tests.push_back({"Stress-Parens", deep_open + "123" + deep_close, 123.0});
+
+    std::string alt_chain = "0";
+    for(int i=0; i<100; ++i) alt_chain += "+10-10";
+    tests.push_back({"Stress-Alt", alt_chain, 0.0});
+
+    // ==========================================
+    // 7. NESTED FUNCTIONS
+    // ==========================================
+    tests.push_back({"DeepFunc", "sqrt(sqrt(sqrt(sqrt(256))))", 1.414214});
+    
+    std::string sin_chain = "0";
+    for(int i=0; i<50; ++i) sin_chain = "sin(" + sin_chain + ")";
+    tests.push_back({"DeepFunc-Sin", sin_chain, 0.0});
+
+    // ==========================================
+    // 8. EDGE CASES
+    // ==========================================
+    tests.push_back({"Edge", "", 0.0});
+    tests.push_back({"Edge", "()", 0.0});
+    tests.push_back({"Edge", "((()))", 0.0});
+    tests.push_back({"Edge", "1/0", 0.0});
+    tests.push_back({"Edge", "0/0", 0.0}); 
+    tests.push_back({"Edge", "007", 7.0});
+    tests.push_back({"Autofix", "((2+2", 4.0});
+    tests.push_back({"Autofix", "2+2))", 4.0});
+
+    // --- URUCHAMIANIE TESTÓW ---
+
+    std::cout << "Uruchamianie " << tests.size() << " testow..." << std::endl;
+    std::cout << "========================================================================" << std::endl;
+    std::cout << std::left << std::setw(6) << "ID"
+              << std::setw(15) << "CATEGORY" 
+              << std::setw(40) << "EXPRESSION (truncated)" 
+              << std::setw(10) << "EXPECTED" 
+              << std::setw(10) << "GOT" 
+              << "STATUS" << std::endl;
+    std::cout << "========================================================================" << std::endl;
+
+    int passed = 0;
+    int failed = 0;
+    int crashed = 0;
+    int testId = 1;
+
+    for (const auto& t : tests) {
+        double result = 0.0;
+        bool hasException = false;
         
-        double val = MathEngine::mathengine(data[i].expr);
-        
-        double diff = std::abs(val - data[i].expected);
-        double pct = 0.0;
-        
-        if (data[i].expected != 0.0) {
-            pct = (diff / std::abs(data[i].expected)) * 100.0;
-        } else if (diff > TOLERANCE) {
-            pct = 100.0;
+        try {
+            // Wywołanie Twojego silnika
+            result = MathEngine::mathengine(t.expr);
+        } catch (const std::exception& e) {
+            hasException = true;
+        } catch (...) {
+            hasException = true;
         }
 
-        if (isEqual(val, data[i].expected)) {
-            ok++;
-            std::cout << "Test " << std::setw(3) << (i + 1) << " [OK] " 
-                      << std::setw(25) << std::left << data[i].expr 
-                      << " = " << std::setw(8) << val << " (Diff: " 
-                      << std::fixed << std::setprecision(2) << pct << "%)" << std::endl;
+        bool ok = !hasException && isCorrect(result, t.expected);
+
+        if (ok) {
+            passed++;
         } else {
-            fail++;
-            std::cout << "\n----------------------------------------\n";
-            std::cout << "Test " << (i + 1) << " [FAIL] " << data[i].expr << "\n";
-            std::cout << "Oczekiwano: " << data[i].expected << "\n";
-            std::cout << "Otrzymano:  " << val << "\n";
-            std::cout << "Roznica:    " << pct << "%\n";
-            std::cout << "----------------------------------------\n\n";
+            failed++;
+            if (hasException) crashed++;
         }
+
+        // Warunek wyświetlania (teraz wyświetla wszystko)
+        if (!ok || !SHOW_ONLY_FAILURES) {
+             std::string dispExpr = t.expr;
+             // Ucinanie zbyt długich wyrażeń dla czytelności w konsoli
+             if (dispExpr.length() > 37) dispExpr = dispExpr.substr(0, 34) + "...";
+             
+             std::cout << std::left << std::setw(6) << testId 
+                       << std::setw(15) << t.category 
+                       << std::setw(40) << dispExpr
+                       << std::setw(10) << t.expected 
+                       << std::setw(10) << (hasException ? "ERR" : std::to_string(result))
+                       << (ok ? "[ OK ]" : (hasException ? "[CRASH]" : "[FAIL]")) 
+                       << std::endl;
+        }
+        testId++;
     }
 
-    std::cout << "\n--------------------------------------------------------\n";
-    std::cout << "WYNIK KONCOWY:\n";
-    std::cout << "Poprawne: " << ok << "\n";
-    std::cout << "Bledne:   " << fail << "\n";
+    std::cout << "========================================================================" << std::endl;
+    std::cout << "SUMMARY:" << std::endl;
+    std::cout << "TOTAL:   " << tests.size() << std::endl;
+    std::cout << "PASSED:  " << passed << std::endl;
+    std::cout << "FAILED:  " << failed << std::endl;
+    std::cout << "CRASHES: " << crashed << " (Exception thrown)" << std::endl;
+    
+    if (failed == 0 && crashed == 0) {
+        std::cout << "\nCONGRATULATIONS! ENGINE IS ROBUST!" << std::endl;
+    } else {
+        std::cout << "\nFIX BUGS BEFORE RELEASE!" << std::endl;
+    }
 
     return 0;
 }

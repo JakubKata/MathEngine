@@ -15,6 +15,7 @@ public:
 class FunctionSqrt : public Function {
 public:
     double calculate(double token) const override {
+        if (token < 0) return 0.0; 
         return sqrt(token);
     }
 
