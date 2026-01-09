@@ -189,7 +189,7 @@ for (int i = 0; i < input.size(); ++i) {
                 
                 int current_index = i + 1;
 
-            while (current_index + 5 <= input.size() && 
+                while (current_index + 5 <= input.size() && 
                        input[current_index] == '(' &&
                        input[current_index + 1] == '-' &&
                        input[current_index + 2] == '1' &&
