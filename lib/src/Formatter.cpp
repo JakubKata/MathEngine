@@ -53,8 +53,12 @@ for (int i = 0; i < input.size(); ++i) {
                     if (current_index < input.size() && input[current_index] == '(') {
                         int open_parentheses = 0;
                         do {
-                            if (input[current_index] == '(') open_parentheses = open_parentheses + 1;
-                            if (input[current_index] == ')') open_parentheses = open_parentheses - 1 ;
+                            if (input[current_index] == '(') {
+                                open_parentheses = open_parentheses + 1;
+                            }
+                            if (input[current_index] == ')') {
+                                open_parentheses = open_parentheses - 1 ;
+                            }
                             current_index = current_index + 1;
                         } while (current_index < input.size() && open_parentheses > 0);
                     }

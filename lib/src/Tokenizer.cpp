@@ -23,22 +23,17 @@ std::vector<std::string> Tokenizer::processLogic(const std::string &input) {
     }
 
     for (int i = 0; i < tokenized_input.size(); ++i) {
-        if (OperatorFactory::isOperator(tokenized_input[i]) || FunctionFactory::isFunction(tokenized_input[i]) || tokenized_input[i] == "(" || tokenized_input[i] == ")") {
-            continue;
-        } else {
+        if (!(OperatorFactory::isOperator(tokenized_input[i]) || FunctionFactory::isFunction(tokenized_input[i]) || tokenized_input[i] == "(" || tokenized_input[i] == ")")) {
             bool token_is_digit = false;
             for (int j = 0; j < tokenized_input[i].size(); j++) {
                 if (isdigit(tokenized_input[i][j])) {
                     token_is_digit = true;
                 }
             }
-            if (token_is_digit) {
-                continue;
-            } else {
+            if (!token_is_digit) {
                 tokenized_input[i] = "0";
-            }
+            } 
         }
-
     }
     return tokenized_input;
 }    
