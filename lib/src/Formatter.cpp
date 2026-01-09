@@ -149,10 +149,7 @@ for (int i = 0; i < input.size(); ++i) {
                 int start_index = i + 1;
                 int current_index = start_index;
                 int open_parenthesis = 0;
-                do {
-                    if (current_index >= input.size()) {
-                        break;
-                    }     
+                do {  
                     if (input[current_index] == '(') {
                         open_parenthesis = open_parenthesis + 1;
                     }    
@@ -160,7 +157,7 @@ for (int i = 0; i < input.size(); ++i) {
                          open_parenthesis = open_parenthesis - 1;
                     }
                     current_index = current_index + 1;
-                } while (open_parenthesis > 0);                
+                } while (current_index < input.size() && open_parenthesis > 0);                
                 
                 std::string inner_content;
                 for (int k = start_index; k < current_index; ++k) {
