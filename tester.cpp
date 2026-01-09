@@ -30,7 +30,7 @@ int main() {
     std::cout << "Generowanie testow..." << std::endl;
     tests.push_back({"Basic", ".2+2", 2.2});
     tests.push_back({"Basic", "2.5+2.5", 5.0});
-    tests.push_back({"Basic", "10-20", -10.0});
+    tests.push_back({"Basic", "10--20", 30.0});
     tests.push_back({"Basic", "0.1+0.2", 0.3});
     tests.push_back({"Order", "2+2*2", 6.0});
     tests.push_back({"Order", "(2+2)*2", 8.0});
@@ -71,6 +71,13 @@ int main() {
     tests.push_back({"Implicit", "2sqrt(16)", 8.0});
     tests.push_back({"Implicit", "(2+2)2", 8.0});
     tests.push_back({"Implicit", "2(2(2))", 8.0});
+    tests.push_back({"Implicit", "2/-2^-sin(2)^-2^-3^2", -4.00051497579159});
+    tests.push_back({"Implicit", "-2^-2^-2^2", -0.95760328069857});
+    tests.push_back({"Implicit", "2/-2^2", -0.5});
+    tests.push_back({"Implicit", "1/-sin(25)", 7.555609});
+    tests.push_back({"Implicit", "-2^2", -4.0});
+    tests.push_back({"Implicit", "-2/1----1", -1.0});
+    tests.push_back({"Implicit", "-2/1-----3", -5.0});
     std::string sum_chain = "0";
     for(int i=0; i<300; ++i) sum_chain += "+1";
     tests.push_back({"Stress-Add", sum_chain, 300.0});

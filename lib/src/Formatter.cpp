@@ -181,8 +181,85 @@ for (int i = 0; i < input.size(); ++i) {
             input_format = input_format + input[i];
         }
     }
+        input = input_format;
 
-    return '(' + input_format + ')';
+    for (int i = 0; i < input.size(); ++i) {
+        if (OperatorFactory::isOperator(std::string(1, input[i]))) {
+            if (OperatorFactory::getOperator(std::string(1, input[i]))->getPriority() == 2) {
+                
+                int current_index = i + 1;
+
+            while (current_index + 5 <= input.size() && 
+                       input[current_index] == '(' &&
+                       input[current_index + 1] == '-' &&
+                       input[current_index + 2] == '1' &&
+                       input[current_index + 3] == ')' &&
+                       input[current_index + 4] == '*') {                    
+                    current_index = current_index + 5;
+                }
+
+                if (current_index < input.size()) {
+                    if (input[current_index] == '(') {
+                        int open_parenthesis = 0;
+                        do {
+                            if (input[current_index] == '(') {
+                                open_parenthesis = open_parenthesis + 1;
+                            }
+                            if (input[current_index] == ')') {
+                                open_parenthesis = open_parenthesis - 1;
+                            }
+                            current_index = current_index + 1;
+                        } while (current_index < input.size() && open_parenthesis > 0);
+                    } else {
+                        if (current_index < input.size() && input[current_index] == '-') {
+                            current_index = current_index + 1;
+                        }
+                        while (current_index < input.size() && (isdigit(input[current_index]) || input[current_index] == '.' || isalpha(input[current_index]))) {
+                            current_index = current_index + 1;
+                        }
+                        if (current_index < input.size() && input[current_index] == '(') {
+                             int open_parenthesis = 0;
+                             do {
+                                if (input[current_index] == '(') {
+                                    open_parenthesis = open_parenthesis + 1;
+                                }
+                                if (input[current_index] == ')') {
+                                    open_parenthesis = open_parenthesis - 1;
+                                }
+                                current_index = current_index + 1;
+                             } while (current_index < input.size() && open_parenthesis > 0);
+                        }
+                    }
+                }
+
+                while (current_index < input.size() && input[current_index] == '^') {
+                    current_index = current_index + 1;
+                    if (current_index < input.size() && input[current_index] == '(') {
+                         int open_parenthesis = 0;
+                         do {
+                            if (input[current_index] == '(') {
+                                open_parenthesis = open_parenthesis + 1;
+                            }
+                            if (input[current_index] == ')') {
+                                open_parenthesis = open_parenthesis - 1;
+                            }
+                            current_index = current_index + 1;
+                         } while (current_index < input.size() && open_parenthesis > 0);
+                    } else {
+                         if (current_index < input.size() && input[current_index] == '-') {
+                            current_index = current_index + 1;
+                         }
+                         while (current_index < input.size() && (isdigit(input[current_index]) || input[current_index] == '.')) {
+                            current_index = current_index + 1;
+                         }
+                    }
+                }
+                input.insert(current_index, ")");
+                input.insert(i + 1, "(");
+            }
+        }
+    }
+    return '(' + input + ')'; 
 }    
 
 void Formater::formater(std::string &input) {
