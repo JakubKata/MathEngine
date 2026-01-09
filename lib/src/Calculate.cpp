@@ -33,10 +33,10 @@ int Engine::operatorIndex(std::vector<std::string> &part_input) {
 double Engine::processLogic(std::vector<std::string> &part_input) {
     if (part_input.size() == 1) {
         return std::stod(part_input[0]);
+    }
     if (part_input.empty()){
         return 0;
     }    
-    }
     while (part_input.size() > 1) {
         int operator_index = operatorIndex(part_input);
         double solution = (OperatorFactory::getOperator(part_input[operator_index]))->calculate(std::stod(part_input[operator_index - 1]), std::stod(part_input[operator_index + 1]));

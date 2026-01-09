@@ -28,7 +28,7 @@ int main() {
     std::vector<TestCase> tests;
 
     std::cout << "Generowanie testow..." << std::endl;
-    tests.push_back({"Basic", "2+2", 4.0});
+    tests.push_back({"Basic", ".2+2", 2.2});
     tests.push_back({"Basic", "2.5+2.5", 5.0});
     tests.push_back({"Basic", "10-20", -10.0});
     tests.push_back({"Basic", "0.1+0.2", 0.3});

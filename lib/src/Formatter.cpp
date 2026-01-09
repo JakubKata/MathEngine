@@ -53,16 +53,20 @@ for (int i = 0; i < input.size(); ++i) {
                     if (current_index < input.size() && input[current_index] == '(') {
                         int open_parentheses = 0;
                         do {
-                            if (input[current_index] == '(') open_parentheses++;
-                            if (input[current_index] == ')') open_parentheses--;
+                            if (input[current_index] == '(') open_parentheses = open_parentheses + 1;
+                            if (input[current_index] == ')') open_parentheses = open_parentheses - 1 ;
                             current_index = current_index + 1;
                         } while (current_index < input.size() && open_parentheses > 0);
                     }
                 } else if (current_index < input.size() && input[current_index] == '(') {
                     int open_parentheses = 0;
                     do {
-                        if (input[current_index] == '(') open_parentheses++;
-                        if (input[current_index] == ')') open_parentheses--;
+                        if (input[current_index] == '(') {
+                            open_parentheses = open_parentheses + 1;
+                        }
+                        if (input[current_index] == ')') {
+                            open_parentheses = open_parentheses - 1;
+                        }
                         current_index = current_index + 1;
                     } while (current_index < input.size() && open_parentheses > 0);
                 }
@@ -140,13 +144,19 @@ for (int i = 0; i < input.size(); ++i) {
             else if (i + 1 < input.size() && input[i+1] == '(') {
                 int start_index = i + 1;
                 int current_index = start_index;
-                int parenthesis_balance = 0;
+                int open_parenthesis = 0;
                 do {
-                    if (current_index >= input.size()) break; 
-                    if (input[current_index] == '(') parenthesis_balance++;
-                    if (input[current_index] == ')') parenthesis_balance--;
+                    if (current_index >= input.size()) {
+                        break;
+                    }     
+                    if (input[current_index] == '(') {
+                        open_parenthesis = open_parenthesis + 1;
+                    }    
+                    if (input[current_index] == ')') {
+                         open_parenthesis = open_parenthesis - 1;
+                    }
                     current_index = current_index + 1;
-                } while (parenthesis_balance > 0);                
+                } while (open_parenthesis > 0);                
                 
                 std::string inner_content;
                 for (int k = start_index; k < current_index; ++k) {
