@@ -3,13 +3,9 @@
 double MathEngine::mathengine(std::string input) {
     std::vector<std::string> pressed_input;
     double solution;
-    std::cout << "[DBG] input=" << input << std::endl;
     Formater::formater(input);
-    std::cout << "[DBG] formatted=" << input << std::endl;
     Tokenizer::tokenizer(input, pressed_input);
-    std::cout << "[DBG] tokenized size=" << pressed_input.size() << std::endl;
     Algorithm::algorithm(pressed_input, solution);
-    std::cout << "[DBG] solved=" << solution << std::endl;
     return solution;
 }
 
