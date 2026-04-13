@@ -5,12 +5,13 @@
 #include <cctype>
 #include <cmath>
 #include <algorithm>
+#include <stdexcept>
 #include "Operator.hpp"
 #include "Function.hpp"
 
 class Engine {
 private:
-    static void dualOperatorSecurity(std::vector<std::string> &part_input);
+    static void OperatorSecurity(std::vector<std::string> &part_input);
     static int operatorIndex(std::vector<std::string> &part_input);
     static double processLogic(std::vector<std::string> &part_input);
 public:

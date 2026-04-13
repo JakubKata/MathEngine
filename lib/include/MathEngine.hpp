@@ -5,6 +5,8 @@
 #include <cctype>
 #include <cmath>
 #include <algorithm>
+#include <stdexcept>
+#include "CalculationResult.hpp"
 #include "Operator.hpp"
 #include "Function.hpp"
 #include "Formatter.hpp"
@@ -15,4 +17,5 @@ class MathEngine {
 public:
     MathEngine() = delete;
     static double mathengine(std::string input);
+    static CalculationResult calculateSafe(std::string input);
 };

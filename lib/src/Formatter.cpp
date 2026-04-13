@@ -2,7 +2,7 @@
 
 std::string Formater::processLogic(std::string &input) {
     if (input.empty()) {
-        input = "0.0";
+        throw std::invalid_argument("Input cannot be empty");
     }
 
     bool one_index_is_digit = false;
@@ -12,25 +12,39 @@ std::string Formater::processLogic(std::string &input) {
         }
     }
     if (!one_index_is_digit){
-        input = "0.0";
+        throw std::invalid_argument("Input must contain at least one digit");
     }
 
-    int parenthesis_open = 0;
-    int parenthesis_close = 0;
+    int parenthesis_balance = 0;
+    int needed_open_parenthesis = 0;
     for (int i = 0; i < input.size(); ++i) {
         if (input[i] == '(') {
-            parenthesis_open = parenthesis_open + 1;
+            parenthesis_balance = parenthesis_balance + 1;
         } else if (input[i] == ')') {
-            parenthesis_close = parenthesis_close + 1;
+            if (parenthesis_balance == 0) {
+                needed_open_parenthesis = needed_open_parenthesis + 1;
+            } else {
+                parenthesis_balance = parenthesis_balance - 1;
+            }
         }
     }
-    while (parenthesis_close != parenthesis_open) {
-        if (parenthesis_open > parenthesis_close) {
-            parenthesis_close = parenthesis_close + 1;
-            input = input + ')';
-        } else if (parenthesis_open < parenthesis_close) {
-            parenthesis_open = parenthesis_open + 1;
-            input = '(' + input;
+
+    if (needed_open_parenthesis > 0) {
+        input = std::string(needed_open_parenthesis, '(') + input;
+    }
+    if (parenthesis_balance > 0) {
+        input = input + std::string(parenthesis_balance, ')');
+    }
+
+    for (int i = 0; i < input.size(); ++i) {
+        if (input[i] == '(') {
+            int next_non_space = i + 1;
+            while (next_non_space < input.size() && isspace(input[next_non_space])) {
+                next_non_space = next_non_space + 1;
+            }
+            if (next_non_space < input.size() && input[next_non_space] == ')') {
+                throw std::invalid_argument("Syntax error: empty parenthesis group");
+            }
         }
     }
     

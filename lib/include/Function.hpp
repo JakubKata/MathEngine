@@ -5,6 +5,7 @@
 #include <cctype>
 #include <cmath>
 #include <algorithm>
+#include <stdexcept>
 
 class Function{
 public:
@@ -15,7 +16,9 @@ public:
 class FunctionSqrt : public Function {
 public:
     double calculate(double token) const override {
-        if (token < 0) return 0.0; 
+        if (token < 0) {
+            throw std::runtime_error("Square root of negative number");
+        }
         return sqrt(token);
     }
 
@@ -89,5 +92,6 @@ public:
             static FunctionTan op;
             return &op;
         }
+        throw std::invalid_argument("Unknown function: " + token);
     }
 };

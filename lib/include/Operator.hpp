@@ -5,6 +5,7 @@
 #include <cctype>
 #include <cmath>
 #include <algorithm>
+#include <stdexcept>
 
 class Operator {
 public:
@@ -43,7 +44,9 @@ public:
 class DivideOperator : public Operator {
 public:
     double calculate(double left, double right) const override {
-        if (right == 0) return 0.0; 
+        if (right == 0) {
+            throw std::runtime_error("Division by zero");
+        }
         return left / right;
     }
     int getPriority() const override {
@@ -98,5 +101,6 @@ public:
             static PowerOperator op;
             return &op;
         }
+        throw std::invalid_argument("Unknown operator: " + token);
     }
 };

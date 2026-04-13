@@ -20,6 +20,7 @@ add_library(MathCore STATIC
      
     lib/include/Algorithm.hpp
     lib/include/Calculate.hpp
+    lib/include/CalculationResult.hpp
     lib/include/Formatter.hpp
     lib/include/Function.hpp
     lib/include/MathEngine.hpp

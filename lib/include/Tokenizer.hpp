@@ -4,6 +4,7 @@
 #include <vector>
 #include <cctype>
 #include <algorithm>
+#include <stdexcept>
 #include "Operator.hpp"
 #include "Function.hpp"
 

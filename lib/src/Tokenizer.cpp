@@ -6,6 +6,9 @@ std::vector<std::string> Tokenizer::processLogic(const std::string &input) {
     bool point_in_digit = false;
 
     for (int i = 0; i < input.size(); ++i) {
+        if (isspace(input[i])) {
+            continue;
+        }    
         if (OperatorFactory::isOperator(std::string(1, input[i])) || FunctionFactory::isFunction(std::string(1, input[i])) || input[i] == '(' || input[i] == ')') {
             if (!digit.empty()) {
                 tokenized_input.push_back(digit);
@@ -19,7 +22,13 @@ std::vector<std::string> Tokenizer::processLogic(const std::string &input) {
         } else if (input[i] == '.' && !point_in_digit) {
             digit = digit + input[i];
             point_in_digit = true;
+        } else {
+            throw std::invalid_argument(std::string("Invalid character in input: ") + input[i]);
         }
+    }
+
+    if (!digit.empty()) {
+        tokenized_input.push_back(digit);
     }
 
     for (int i = 0; i < tokenized_input.size(); ++i) {
@@ -31,7 +40,7 @@ std::vector<std::string> Tokenizer::processLogic(const std::string &input) {
                 }
             }
             if (!token_is_digit) {
-                tokenized_input[i] = "0";
+                throw std::invalid_argument("Invalid token: " + tokenized_input[i]);
             } 
         }
     }
