@@ -17,19 +17,12 @@ add_library(MathCore STATIC
     lib/src/Formatter.cpp
     lib/src/MathEngine.cpp
     lib/src/Tokenizer.cpp
-     
-    lib/include/Algorithm.hpp
-    lib/include/Calculate.hpp
-    lib/include/CalculationResult.hpp
-    lib/include/Formatter.hpp
-    lib/include/Function.hpp
-    lib/include/MathEngine.hpp
-    lib/include/Operator.hpp
-    lib/include/Tokenizer.hpp
 )
 
-target_include_directories(MathCore PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/lib/include)
+target_include_directories(MathCore PUBLIC 
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/lib/include>
+)
 
-add_executable(MathTester tester.cpp)
-
-target_link_libraries(MathTester PRIVATE MathCore)
+if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+    add_subdirectory(tests)
+endif()
