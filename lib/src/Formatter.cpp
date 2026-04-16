@@ -56,7 +56,7 @@ std::string Formatter::processLogic(std::string &input) {
     
     std::string input_format;
 
-for (int i = 0; i < input.size(); ++i) {            
+    for (int i = 0; i < input.size(); ++i) {            
         if (i + 1 < input.size() && input[i] == '^' && input[i+1] == '-') {
             int start_index = i + 2;
             int current_index = start_index;
@@ -201,7 +201,7 @@ for (int i = 0; i < input.size(); ++i) {
             input_format = input_format + input[i];
         }
     }
-        input = input_format;
+    input = input_format;
 
     for (int i = 0; i < input.size(); ++i) {
         if (OperatorFactory::isOperator(std::string(1, input[i]))) {

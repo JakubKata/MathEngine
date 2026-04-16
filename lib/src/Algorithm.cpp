@@ -1,4 +1,4 @@
-#include"Algorithm.hpp"
+#include "Algorithm.hpp"
 #include <stdexcept>
 #include "Calculate.hpp"
 
