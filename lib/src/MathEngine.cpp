@@ -10,7 +10,7 @@ namespace MathEngine {
 double Math::calculate(std::string input) {
     std::vector<std::string> pressed_input;
     double solution;
-    Formater::formater(input);
+    Formatter::formatter(input);
     Tokenizer::tokenizer(input, pressed_input);
     Algorithm::algorithm(pressed_input, solution);
     return solution;

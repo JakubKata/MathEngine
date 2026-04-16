@@ -3,12 +3,12 @@
 
 namespace MathEngine {
 
-class Formater {
+class Formatter {
 private:
     static std::string processLogic(std::string &input);
 public:
-    Formater() = delete;
-    static void formater(std::string &input);
+    Formatter() = delete;
+    static void formatter(std::string &input);
 };
 
 }

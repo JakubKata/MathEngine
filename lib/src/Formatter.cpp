@@ -6,7 +6,7 @@
 
 namespace MathEngine {
 
-std::string Formater::processLogic(std::string &input) {
+std::string Formatter::processLogic(std::string &input) {
     if (input.empty()) {
         throw std::invalid_argument("Input cannot be empty");
     }
@@ -282,7 +282,7 @@ for (int i = 0; i < input.size(); ++i) {
     return '(' + input + ')'; 
 }    
 
-void Formater::formater(std::string &input) {
+void Formatter::formatter(std::string &input) {
     input = processLogic(input);
 }
 
