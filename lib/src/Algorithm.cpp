@@ -1,4 +1,8 @@
 #include"Algorithm.hpp"
+#include <stdexcept>
+#include "Calculate.hpp"
+
+namespace MathEngine {
 
 void Algorithm::parenthesis_index(const std::vector<std::string> &tokenized_input, int &parenthesis_open_index, int &parenthesis_close_index) {
     int parenthesis_current_open_index = -1;
@@ -44,4 +48,6 @@ double Algorithm::processLogic(std::vector<std::string> &tokenized_input) {
 
 void Algorithm::algorithm(std::vector<std::string> &tokenized_input, double &solution) {
     solution = processLogic(tokenized_input);
+}
+
 }

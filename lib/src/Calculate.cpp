@@ -1,4 +1,9 @@
 #include "Calculate.hpp"
+#include <stdexcept>
+#include "Function.hpp"
+#include "Operator.hpp"
+
+namespace MathEngine {
 
 void Engine::OperatorSecurity(std::vector<std::string> &part_input){
     if (part_input.empty()) return;
@@ -89,4 +94,6 @@ double Calculate::processLogic(std::vector<std::string> &part_input) {
 
 double Calculate::calculate(std::vector<std::string> &part_input) {
     return processLogic(part_input);
+}
+
 }

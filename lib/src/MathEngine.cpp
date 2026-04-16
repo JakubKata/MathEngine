@@ -1,6 +1,13 @@
-#include "MathEngine.hpp" 
+#include "MathEngine.hpp"
+#include <exception>
+#include <vector>
+#include "Algorithm.hpp"
+#include "Formatter.hpp"
+#include "Tokenizer.hpp"
 
-double MathEngine::mathengine(std::string input) {
+namespace MathEngine {
+
+double Math::calculate(std::string input) {
     std::vector<std::string> pressed_input;
     double solution;
     Formater::formater(input);
@@ -9,11 +16,11 @@ double MathEngine::mathengine(std::string input) {
     return solution;
 }
 
-CalculationResult MathEngine::calculateSafe(std::string input) {
+CalculationResult Math::calculateSafe(std::string input) {
     CalculationResult result;
     
     try {
-        result.value = mathengine(input);
+        result.value = calculate(input);
         result.isSuccess = true;
         result.errorMessage = ""; 
     } 
@@ -29,4 +36,6 @@ CalculationResult MathEngine::calculateSafe(std::string input) {
     }
 
     return result;
+}
+
 }

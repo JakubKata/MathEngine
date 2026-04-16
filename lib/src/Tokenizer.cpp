@@ -1,4 +1,10 @@
 #include "Tokenizer.hpp"
+#include <cctype>
+#include <stdexcept>
+#include "Function.hpp"
+#include "Operator.hpp"
+
+namespace MathEngine {
 
 std::vector<std::string> Tokenizer::processLogic(const std::string &input) {
     std::vector<std::string> tokenized_input;
@@ -49,5 +55,7 @@ std::vector<std::string> Tokenizer::processLogic(const std::string &input) {
 
 void Tokenizer::tokenizer(std::string &input, std::vector<std::string> &tokenized_input) {
     tokenized_input = processLogic(input);
+}
+
 }
 

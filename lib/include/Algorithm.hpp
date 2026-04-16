@@ -1,12 +1,8 @@
 #pragma once
-#include <iostream>
 #include <string>
 #include <vector>
-#include <cctype>
-#include <algorithm>
-#include "Operator.hpp"
-#include "Function.hpp"
-#include "Calculate.hpp"
+
+namespace MathEngine {
 
 class Algorithm {
 private:
@@ -16,3 +12,5 @@ public:
     Algorithm() = delete;
     static void algorithm(std::vector<std::string> &tokenized_input, double &solution);
 };
+
+}

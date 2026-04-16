@@ -1,11 +1,10 @@
 #pragma once
-#include <iostream>
 #include <string>
-#include <vector>
 #include <cctype>
 #include <cmath>
-#include <algorithm>
 #include <stdexcept>
+
+namespace MathEngine {
 
 class Operator {
 public:
@@ -104,3 +103,5 @@ public:
         throw std::invalid_argument("Unknown operator: " + token);
     }
 };
+
+}

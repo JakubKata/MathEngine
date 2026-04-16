@@ -1,11 +1,9 @@
 #pragma once
-#include <iostream>
 #include <string>
-#include <vector>
-#include <cctype>
 #include <cmath>
-#include <algorithm>
 #include <stdexcept>
+
+namespace MathEngine {
 
 class Function{
 public:
@@ -95,3 +93,5 @@ public:
         throw std::invalid_argument("Unknown function: " + token);
     }
 };
+
+}

@@ -1,12 +1,8 @@
 #pragma once
-#include <iostream>
 #include <string>
 #include <vector>
-#include <cctype>
-#include <algorithm>
-#include <stdexcept>
-#include "Operator.hpp"
-#include "Function.hpp"
+
+namespace MathEngine {
 
 class Tokenizer {
 private:
@@ -15,3 +11,5 @@ public:
     Tokenizer() = delete;
     static void tokenizer(std::string &input, std::vector<std::string> &tokenized_input);
 };
+
+}

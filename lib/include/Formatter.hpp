@@ -1,12 +1,7 @@
 #pragma once
-#include <iostream>
 #include <string>
-#include <vector>
-#include <cctype>
-#include <algorithm>
-#include <stdexcept>
-#include "Operator.hpp"
-#include "Function.hpp"
+
+namespace MathEngine {
 
 class Formater {
 private:
@@ -15,3 +10,5 @@ public:
     Formater() = delete;
     static void formater(std::string &input);
 };
+
+}

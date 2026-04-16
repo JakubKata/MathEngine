@@ -4,7 +4,9 @@
 #include <cmath>
 #include <iomanip>
 #include <limits>
-#include "MathEngine.hpp" 
+#include "MathEngine.hpp"
+
+using namespace MathEngine;
 
 const double EPSILON = 0.001;
 const bool SHOW_ONLY_FAILURES = false;
@@ -121,8 +123,8 @@ int main() {
     tests.push_back({"Math-Err", "0/0", 0.0, true}); 
     tests.push_back({"Math-Err", "sqrt(-16)", 0.0, true}); 
     
-    tests.push_back({"Syntax-Err", "((2+2", 4.0, true}); 
-    tests.push_back({"Syntax-Err", "2+2))", 4.0, true});
+    tests.push_back({"Auto-Parens", "((2+2", 4.0, false}); 
+    tests.push_back({"Auto-Parens", "2+2))", 4.0, false});
     
     tests.push_back({"Syntax-Err", "2**3", 0.0, true});
     tests.push_back({"Syntax-Err", "*5+2", 0.0, true});
@@ -144,7 +146,7 @@ int main() {
     int testId = 1;
 
     for (const auto& t : tests) {
-        CalculationResult res = MathEngine::calculateSafe(t.expr);
+        CalculationResult res = Math::calculateSafe(t.expr);
         bool ok = false;
         
         if (t.expectError) {

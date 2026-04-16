@@ -1,13 +1,8 @@
 #pragma once
-#include <iostream>
 #include <string>
 #include <vector>
-#include <cctype>
-#include <cmath>
-#include <algorithm>
-#include <stdexcept>
-#include "Operator.hpp"
-#include "Function.hpp"
+
+namespace MathEngine {
 
 class Engine {
 private:
@@ -26,3 +21,5 @@ public:
     Calculate() = delete;
     static double calculate(std::vector<std::string> &part_input);
 };
+
+}

@@ -1,4 +1,10 @@
 #include "Formatter.hpp"
+#include <cctype>
+#include <stdexcept>
+#include "Function.hpp"
+#include "Operator.hpp"
+
+namespace MathEngine {
 
 std::string Formater::processLogic(std::string &input) {
     if (input.empty()) {
@@ -278,4 +284,6 @@ for (int i = 0; i < input.size(); ++i) {
 
 void Formater::formater(std::string &input) {
     input = processLogic(input);
+}
+
 }
