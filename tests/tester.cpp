@@ -31,9 +31,6 @@ int main() {
 
     std::cout << "Generowanie testow..." << std::endl;
     
-    // ==========================================
-    // TESTY POPRAWNE (Oczekują sukcesu i wyniku)
-    // ==========================================
     tests.push_back({"Basic", ".2+2", 2.2});
     tests.push_back({"Basic", "2.5+2.5", 5.0});
     tests.push_back({"Basic", "10--20", 30.0});
@@ -91,6 +88,117 @@ int main() {
     tests.push_back({"Implicit", "-2/1----1", -1.0});
     tests.push_back({"Implicit", "-2/1-----3", -5.0});
     
+    tests.push_back({"UnaryRefactor", "--3", 3.0});
+    tests.push_back({"UnaryRefactor", "---3", -3.0});
+    tests.push_back({"UnaryRefactor", "-(2+3)^2", -25.0});
+    tests.push_back({"UnaryRefactor", "2*-(3+1)", -8.0});
+    tests.push_back({"UnaryRefactor", "(-3)^2", 9.0});
+    tests.push_back({"UnaryRefactor", "-2*-3", 6.0});
+    tests.push_back({"UnaryRefactor", "--2^2", 4.0});
+    tests.push_back({"UnaryRefactor", "-(-(-2))", -2.0});
+    tests.push_back({"UnaryRefactor", "2^--3", 8.0});
+    tests.push_back({"UnaryRefactor", "-(1)", -1.0});
+    tests.push_back({"UnaryRefactor", "-(-(1))", 1.0});
+    tests.push_back({"UnaryRefactor", "3*-(2^2)", -12.0});
+    tests.push_back({"UnaryRefactor", "((2+3)*(4+1) - 6/3)^2", 529.0});
+
+    tests.push_back({"UnaryRefactor", "(((12+34)*(56-78))/2)+((90*12)-(34/2))", 557.0});
+    tests.push_back({"UnaryRefactor", "((1+2)*(3+4)*(5+6)*(7+8))/(1+1+1+1)", 866.25});
+    tests.push_back({"UnaryRefactor", "((100-(20*3))+(40/(5-3)))-(10*(2+1))", 30.0});
+    tests.push_back({"UnaryRefactor", "((((5+5)*5)-5)*5)-5", 220.0});
+    tests.push_back({"UnaryRefactor", "1+(2+(3+(4+(5+(6+(7+(8+(9+10))))))))", 55.0});
+    tests.push_back({"UnaryRefactor", "((10-2)*3-(5+4)*2)*(8/2+1)", 30.0});
+    tests.push_back({"UnaryRefactor", "((2^3)*(3^2)-(4^2))*2 - 100", 12.0});
+    tests.push_back({"UnaryRefactor", "(100/2/2/2)-(50/5/5)", 10.5});
+    tests.push_back({"UnaryRefactor", "((4+8)*(12-4))/((6+2)*(5-3))", 6.0});
+    tests.push_back({"UnaryRefactor", "((15+5)*(20-10))/((25-5)*(30-20))", 1.0});
+    tests.push_back({"UnaryRefactor", "((9+3)*(8-2)-(7+1)*(6-3))^2", 2304.0});
+    tests.push_back({"UnaryRefactor", "(((2+2)^2)^2)-250", 6.0});
+    tests.push_back({"UnaryRefactor", "(1+2+3+4+5)*(1-2+3-4+5)", 45.0});
+    tests.push_back({"UnaryRefactor", "((50-10*4)+20)/((30/3)-5)", 6.0});
+    tests.push_back({"UnaryRefactor", "((100+200)*3)/((400-100)/2)", 6.0});
+    tests.push_back({"UnaryRefactor", "((3*4)+(5*6)-(7*8)) * (2+2)", -56.0});
+    tests.push_back({"UnaryRefactor", "((1.5+2.5)*(4.5-0.5))^2", 256.0});
+    tests.push_back({"UnaryRefactor", "((((10-2)*2)-4)*2)-8", 16.0});
+    tests.push_back({"UnaryRefactor", "(120/2)/(60/4)*(10-2)", 32.0});
+    tests.push_back({"UnaryRefactor", "((9^2)-(8^2))*((7^2)-(6^2))", 221.0});
+    tests.push_back({"UnaryRefactor", "(((3+1)^2)+4)/((2^2)+1)", 4.0});
+    tests.push_back({"UnaryRefactor", "((10*10)-(9*9))*((8*8)-(7*7))", 285.0});
+    tests.push_back({"UnaryRefactor", "((25/5)+(36/6))*((49/7)-(16/4))", 33.0});
+    tests.push_back({"UnaryRefactor", "((5*5*5)-(4*4*4))/(2+1)", 20.333333333});
+    tests.push_back({"UnaryRefactor", "((10-5)*(20-10)*(30-15))/125", 6.0});
+    tests.push_back({"UnaryRefactor", "(((2+3)^2)-(4-1)^2)^2", 256.0});
+    tests.push_back({"UnaryRefactor", "(100-(50-(25-(10-5))))", 70.0});
+    tests.push_back({"UnaryRefactor", "((12+18)/5)*((40-16)/4)", 36.0});
+    tests.push_back({"UnaryRefactor", "((((2*2)*2)*2)*2)-30", 2.0});
+    tests.push_back({"UnaryRefactor", "2+3*4-5/1+2^3", 17.0});
+    tests.push_back({"UnaryRefactor", "100-20*4+50/2^2", 32.5});
+    tests.push_back({"UnaryRefactor", "5*5+4*4-3*3+2*2^3", 48.0});
+    tests.push_back({"UnaryRefactor", "1+2*3^2*4+5", 78.0});
+    tests.push_back({"UnaryRefactor", "10-2-3-4-5*0", 1.0});
+    tests.push_back({"UnaryRefactor", "2^4/4^2*5*5-20", 5.0});
+    tests.push_back({"UnaryRefactor", "0.5*4+1.5*2-3^2/3", 2.0});
+    tests.push_back({"UnaryRefactor", "100/5/5*2^3-10", 22.0});
+    tests.push_back({"UnaryRefactor", "3*4^2/2+5-1", 28.0});
+    tests.push_back({"UnaryRefactor", "7+7/7+7*7-7", 50.0});
+    tests.push_back({"UnaryRefactor", "2*3+4*5-6/2+2^2", 27.0});
+    tests.push_back({"UnaryRefactor", "10-10*0+10/10", 11.0});
+    tests.push_back({"UnaryRefactor", "5^2-4^2+3^2-2^2+1^2", 15.0});
+    tests.push_back({"UnaryRefactor", "2.5*4+10/0.5-5^2", 5.0});
+    tests.push_back({"UnaryRefactor", "1+1+1+1*0+1+1", 5.0});
+    tests.push_back({"UnaryRefactor", "-5+-5", -10.0});
+    tests.push_back({"UnaryRefactor", "-(-5)", 5.0});
+    tests.push_back({"UnaryRefactor", "-2^2", -4.0});
+    tests.push_back({"UnaryRefactor", "(-2)^2", 4.0});
+    tests.push_back({"UnaryRefactor", "-10*-2/-5", -4.0});
+    tests.push_back({"UnaryRefactor", "-((2+3)*-2)", 10.0});
+    tests.push_back({"UnaryRefactor", "-1-1-1-1", -4.0});
+    tests.push_back({"UnaryRefactor", "5*-2--3", -7.0});
+    tests.push_back({"UnaryRefactor", "-(10-(5--2))", -3.0});
+    tests.push_back({"UnaryRefactor", "-0.5*-4.0", 2.0});
+    tests.push_back({"UnaryRefactor", "-2^-3", -0.125});
+    tests.push_back({"UnaryRefactor", "(-3)^-2", 0.111111111});
+    tests.push_back({"UnaryRefactor", "-100/(-2)/(-2)", -25.0});
+    tests.push_back({"UnaryRefactor", "-((-10+5)*-2)", -10.0});
+    tests.push_back({"UnaryRefactor", "-5^2-(-5)^2", -50.0});
+    tests.push_back({"Complex", "10+2*(5-3)^3/-4--sin(0)", 6.0});
+    tests.push_back({"Complex", "(((1+2)*3)-4)^2/5", 5.0});
+    tests.push_back({"Complex", "2*(3+4*(5-2))-10/2", 25.0});
+    tests.push_back({"Complex", "(1.5*2+3.5*2-10)^2/0.01", 0.0});
+    tests.push_back({"WeirdMix", "-(2^2)^-1*-8", 2.0});
+    tests.push_back({"WeirdMix", "-sqrt(16)^-1*-4", 1.0});
+    tests.push_back({"WeirdMix", "--2^---3", 0.125});        
+    tests.push_back({"WeirdMix", "-(-2)^3", 8.0});           
+    tests.push_back({"WeirdMix", "2/(-2)/(-2)", 0.5});       
+    tests.push_back({"WeirdMix", "-2^2^3", -256.0});
+    tests.push_back({"ImplicitHard", "2(3+4)(5-1)", 56.0});  
+    tests.push_back({"ImplicitHard", "-(2)-(-3)(2)", 4.0});  
+    tests.push_back({"ImplicitHard", "2sqrt(9)cos(0)", 6.0}); 
+    tests.push_back({"ImplicitHard", "((2)3)4", 24.0});      
+    tests.push_back({"ImplicitHard", "-2(3)^2", -18.0});
+    tests.push_back({"Monster", "sqrt(10^2-6^2)+((2^3)^2/4)-sqrt(25)*-2", 34.0}); 
+    tests.push_back({"Monster", "2^3*3^2/2^2*4^0.5-10", 26.0});                  
+    tests.push_back({"Monster", "sin(0)+cos(0)*sqrt(16)/2^2*(-1+2)", 1.0});      
+    tests.push_back({"Monster", "100/10/2/0.5*3", 30.0});                
+    tests.push_back({"Monster", "2+3-4*5/6^2+7", 11.4444444444});
+    tests.push_back({"Syntax-Err", "2+*3", 0.0, true});
+    tests.push_back({"Syntax-Err", "/5", 0.0, true});
+    tests.push_back({"Syntax-Err", "()2", 0.0, true});
+    tests.push_back({"Syntax-Err", "sin(2+)", 0.0, true});
+    tests.push_back({"Syntax-Err", "3.14.15", 0.0, true});
+
+    tests.push_back({"Advanced", "((2+3)*(4+1) - 6/3)^2", 529.0});
+    tests.push_back({"Advanced", "2*(3+4)^2 - 3^2*(4-1)", 71.0});
+    tests.push_back({"Advanced", "2^(2+1) + 3^(2-1)", 11.0});
+    tests.push_back({"Advanced", "3*(2+sqrt(16)) - 2^3", 10.0});
+    tests.push_back({"Advanced", "sqrt((3+4)^2 + (4-4)^2)", 7.0});
+    tests.push_back({"Advanced", "2^3^2^1", 512.0});
+    tests.push_back({"Advanced", "(-2)^3^2", -512.0});
+    tests.push_back({"Advanced", "2(3+4) + 5(1+1)", 24.0});
+    tests.push_back({"Advanced", "((8/2)/2)^2", 4.0});
+    tests.push_back({"Advanced", "-(2^3) + (4^2)", 8.0});
+    tests.push_back({"Advanced", "sin(0)^2 + cos(0)^2", 1.0});
+
     std::string sum_chain = "0";
     for(int i=0; i<300; ++i) sum_chain += "+1";
     tests.push_back({"Stress-Add", sum_chain, 300.0});
@@ -113,9 +221,6 @@ int main() {
     
     tests.push_back({"Edge", "007", 7.0});
 
-    // ==========================================
-    // TESTY BŁĘDÓW (Oczekują isSuccess == false)
-    // ==========================================
     tests.push_back({"Edge-Err", "", 0.0, true});
     tests.push_back({"Edge-Err", "()", 0.0, true});
     tests.push_back({"Edge-Err", "((()))", 0.0, true});

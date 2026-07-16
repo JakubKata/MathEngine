@@ -50,7 +50,7 @@ static std::vector<std::string> tokenizeInput(const std::string &input) {
             flushDigitToken(tokenized_input, digit);
             point_in_digit = false;
             tokenized_input.push_back(std::string(1, input[i]));
-        } else if (isdigit(input[i]) || input[i] == '-') {
+        } else if (isdigit(input[i])) {
             digit = digit + input[i];
         } else if (input[i] == '.' && !point_in_digit) {
             digit = digit + input[i];

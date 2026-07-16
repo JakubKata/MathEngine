@@ -7,6 +7,8 @@ It parses and evaluates math expressions such as:
 - `sqrt(16)+sin(0)`
 - `2^3^2`
 - `2(3+4)` (implicit multiplication)
+- `((2+3)*(4+1)-6/3)^2`
+- `sqrt((3+4)^2 + (4-4)^2)`
 
 The project builds:
 
@@ -23,6 +25,7 @@ The project builds:
 - Floating-point numbers and unary operators
 - Implicit multiplication, for example `2(3)` and `2sqrt(16)`
 - Safe API with structured error reporting (`calculateSafe`)
+- Expanded regression coverage for nested parentheses, chained unary operators, exponent precedence, and mixed function/operator expressions
 
 ---
 
@@ -78,6 +81,15 @@ Linux/macOS:
 ./build/tests/MathTester
 ```
 
+The test runner exercises a broad set of cases, including:
+
+- basic arithmetic and precedence
+- unary operator chains such as `--2^2`
+- right-associative exponentiation like `2^3^2`
+- implicit multiplication such as `2(3+4)`
+- nested expressions like `sqrt((3+4)^2 + (4-4)^2)`
+- error cases for invalid syntax and invalid math operations
+
 ---
 
 ## Usage Example
@@ -100,6 +112,9 @@ int main() {
     } else {
         std::cerr << "Error: " << res.errorMessage << "\n";
     }
+
+    // More complex expression
+    std::cout << Math::calculate("((2+3)*(4+1)-6/3)^2") << "\n";
 }
 ```
 

@@ -8,8 +8,6 @@ namespace MathEngine {
 
 namespace {
 
-static std::string processLogicImpl(std::string input);
-
 static bool containsDigit(const std::string &input) {
     for (int i = 0; i < input.size(); ++i) {
         if (isdigit(input[i])) {
@@ -73,8 +71,35 @@ static int consumeBalancedParentheses(const std::string &input, int start_index)
     return start_index;
 }
 
+static std::string markUnaryMinus(const std::string &input) {
+    std::string result;
+
+    for (int i = 0; i < input.size(); ++i) {
+        if (input[i] == '-') {
+            if (i == 0) {
+                result = result + '~';
+            } else {
+                char prev = input[i - 1];
+                if (prev == '(' || OperatorFactory::isOperator(std::string(1, prev))) {
+                    result = result + '~';
+                } else {
+                    result = result + '-';
+                }
+            }
+        } else {
+            result = result + input[i];
+        }
+    }
+
+    return result;
+}
+
 static int consumeExponentOperand(const std::string &input, int start_index) {
     int current_index = start_index;
+
+    while (current_index < input.size() && input[current_index] == '~') {
+        current_index = current_index + 1;
+    }
 
     if (current_index < input.size() && (isdigit(input[current_index]) || input[current_index] == '.')) {
         while (current_index < input.size() && (isdigit(input[current_index]) || input[current_index] == '.')) {
@@ -103,7 +128,7 @@ static std::string extractNegativeExponentSubstring(const std::string &input, in
 
         if (current_index < input.size() && input[current_index] == '^') {
             current_index = current_index + 1;
-            if (current_index < input.size() && input[current_index] == '-') {
+            if (current_index < input.size() && input[current_index] == '~') {
                 current_index = current_index + 1;
             }
         } else {
@@ -123,16 +148,15 @@ static std::string formatNegativeExponents(const std::string &input) {
     std::string input_format;
 
     for (int i = 0; i < input.size(); ++i) {
-        if (i + 1 < input.size() && input[i] == '^' && input[i + 1] == '-') {
+        if (i + 1 < input.size() && input[i] == '^' && input[i + 1] == '~') {
             int current_index = 0;
             std::string exponent_substring = extractNegativeExponentSubstring(input, i + 2, current_index);
 
             if (!exponent_substring.empty()) {
-                std::string formatted_exponent = processLogicImpl(exponent_substring);
-                input_format = input_format + "^(-" + formatted_exponent + ")";
+                input_format = input_format + "^(~" + exponent_substring + ")";
                 i = current_index - 1;
             } else {
-                input_format = input_format + "^-";
+                input_format = input_format + "^~";
                 i = i + 1;
             }
         } else {
@@ -172,57 +196,13 @@ static std::string insertExplicitMultiplication(const std::string &input) {
     return input_format;
 }
 
-static std::string rewriteUnaryMinus(const std::string &input) {
-    std::string input_format;
-
-    for (int i = 0; i < input.size(); ++i) {
-        if (input[i] == '-' && i > 0 && (input[i - 1] == ')' || isdigit(input[i - 1]))) {
-            input_format = input_format + "+(-1)*";
-        } else if (input[i] == '-') {
-            if (i + 1 < input.size() && (isdigit(input[i + 1]) || input[i + 1] == '.')) {
-                int j = i + 1;
-                while (j < input.size() && (isdigit(input[j]) || input[j] == '.')) {
-                    j = j + 1;
-                }
-                if (j < input.size() && input[j] == '^') {
-                    input_format = input_format + "(-1)*";
-                } else {
-                    input_format = input_format + '-';
-                }
-            } else if (i + 1 < input.size() && input[i + 1] == '(') {
-                int current_index = consumeBalancedParentheses(input, i + 1);
-
-                std::string inner_content;
-                for (int k = i + 1; k < current_index; ++k) {
-                    inner_content = inner_content + input[k];
-                }
-
-                std::string processed_inner = processLogicImpl(inner_content);
-
-                if (current_index < input.size() && input[current_index] == '^') {
-                    input_format = input_format + "(-1)*" + processed_inner;
-                } else {
-                    input_format = input_format + "((-1)*" + processed_inner + ")";
-                }
-                i = current_index - 1;
-            } else {
-                input_format = input_format + "(-1)*";
-            }
-        } else {
-            input_format = input_format + input[i];
-        }
-    }
-
-    return input_format;
-}
-
 static int consumePowerTail(const std::string &input, int current_index) {
     while (current_index < input.size() && input[current_index] == '^') {
         current_index = current_index + 1;
         if (current_index < input.size() && input[current_index] == '(') {
             current_index = consumeBalancedParentheses(input, current_index);
         } else {
-            if (current_index < input.size() && input[current_index] == '-') {
+            while (current_index < input.size() && input[current_index] == '~') {
                 current_index = current_index + 1;
             }
             while (current_index < input.size() && (isdigit(input[current_index]) || input[current_index] == '.')) {
@@ -235,22 +215,18 @@ static int consumePowerTail(const std::string &input, int current_index) {
 }
 
 static int consumeOperandAfterOperator(const std::string &input, int current_index) {
-    while (current_index + 5 <= input.size() &&
-           input[current_index] == '(' &&
-           input[current_index + 1] == '-' &&
-           input[current_index + 2] == '1' &&
-           input[current_index + 3] == ')' &&
-           input[current_index + 4] == '*') {
-        current_index = current_index + 5;
+    while (current_index < input.size() && isspace(input[current_index])) {
+        current_index = current_index + 1;
+    }
+
+    while (current_index < input.size() && input[current_index] == '~') {
+        current_index = current_index + 1;
     }
 
     if (current_index < input.size()) {
         if (input[current_index] == '(') {
             current_index = consumeBalancedParentheses(input, current_index);
         } else {
-            if (current_index < input.size() && input[current_index] == '-') {
-                current_index = current_index + 1;
-            }
             while (current_index < input.size() && (isdigit(input[current_index]) || input[current_index] == '.' || isalpha(input[current_index]))) {
                 current_index = current_index + 1;
             }
@@ -290,10 +266,10 @@ static std::string processLogicImpl(std::string input) {
 
     normalizeParentheses(input);
     validateEmptyParenthesisGroups(input);
+    input = markUnaryMinus(input);
     input = formatNegativeExponents(input);
     input = expandFunctions(input);
     input = insertExplicitMultiplication(input);
-    input = rewriteUnaryMinus(input);
     input = wrapOperatorOperands(input);
 
     return '(' + input + ')';

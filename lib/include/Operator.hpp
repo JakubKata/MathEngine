@@ -12,12 +12,26 @@ public:
     virtual double calculate(double left, double right) const = 0;
     virtual int getPriority() const = 0;
     virtual bool isLeftToRight() const = 0;
+    virtual bool isUnary() const { return false; }
 };
 
 class AddOperator : public Operator {
 public:
     double calculate(double left, double right) const override {
         return left + right;
+    }
+    int getPriority() const override {
+        return 1;
+    }
+    bool isLeftToRight() const override {
+        return true;
+    }
+};
+
+class SubtractOperator : public Operator {
+public:
+    double calculate(double left, double right) const override {
+        return left - right;
     }
     int getPriority() const override {
         return 1;
@@ -69,10 +83,26 @@ public:
     }
 };
 
+class NegateOperator : public Operator {
+public:
+    double calculate(double left, double right) const override {
+        return -right;
+    }
+    int getPriority() const override {
+        return 2;
+    }
+    bool isLeftToRight() const override {
+        return false;
+    }
+    bool isUnary() const override {
+        return true;
+    }
+};
+
 class OperatorFactory {
 public:
     static bool isOperator(std::string token) {
-        if (token == "+" || token == "*" || token == "/" || token == "^") {
+        if (token == "+" || token == "-" || token == "~" || token == "*" || token == "/" || token == "^") {
             return true;
         } else {
             return false;
@@ -90,6 +120,12 @@ public:
         if (token == "+") {
             static AddOperator op; 
             return &op;          
+        } else if (token == "-") {
+            static SubtractOperator op;
+            return &op;
+        } else if (token == "~") {
+            static NegateOperator op;
+            return &op;
         } else if (token == "*") {
             static MultiplyOperator op;
             return &op;
